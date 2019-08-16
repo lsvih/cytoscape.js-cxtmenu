@@ -91,7 +91,6 @@ let cxtmenu = function (params) {
             })
 
             let content = createElement({class: 'cxtmenu-content'})
-            console.log(command.content)
             if (command.content instanceof HTMLElement)
                 content.appendChild(command.content)
             else if (typeof command.content === 'function')
@@ -107,8 +106,7 @@ let cxtmenu = function (params) {
             })
 
             setStyles(content, command.contentStyle || {})
-
-            if (command.disabled === true || command.enabled === false)
+            if (command.enabled === false || (typeof command.enabled === 'function' && command.enabled() === false))
                 content.setAttribute('class', 'cxtmenu-content cxtmenu-disabled')
 
             parent.appendChild(item)
@@ -128,6 +126,7 @@ let cxtmenu = function (params) {
                 let ddtheta = dtheta / command.submenu.length
                 theta2 = theta1 + ddtheta
                 for (let j = 0; j < command.submenu.length; j++) {
+                    let submenu = command.submenu[j]
                     let midtheta = (theta1 + theta2) / 2
                     let rx1 = 1.4 * r * Math.cos(midtheta)
                     let ry1 = 1.4 * r * Math.sin(midtheta)
@@ -149,12 +148,12 @@ let cxtmenu = function (params) {
                         marginTop: (-ry1 - r * 0.33) + 'px'
                     })
                     let content = createElement({class: `cxtmenu-content cxtmenu-submenu-content cxtmenu-${i}-submenu-content`})
-                    if (command.content instanceof HTMLElement)
-                        content.appendChild(command.submenu[j].content)
-                    else if (typeof command.content === 'function')
-                        content.innerHTML = command.submenu[j].content()
+                    if (submenu.content instanceof HTMLElement)
+                        content.appendChild(submenu.content)
+                    else if (typeof submenu.content === 'function')
+                        content.innerHTML = submenu.content()
                     else
-                        content.innerHTML = command.submenu[j].content
+                        content.innerHTML = submenu.content
 
                     setStyles(content, {
                         'width': (r * 0.66) + 'px',
@@ -163,9 +162,9 @@ let cxtmenu = function (params) {
                         'display': 'none'
                     })
                     setStyles(content, command.contentStyle || {})
-                    if (command.disabled === true || command.enabled === false) {
-                        content.setAttribute('class', 'cxtmenu-content cxtmenu-disabled')
-                    }
+                    if (command.enabled === false || (typeof submenu.enabled === 'function' && submenu.enabled() === false))
+                        content.setAttribute('class', `cxtmenu-content cxtmenu-submenu-content cxtmenu-${i}-submenu-content cxtmenu-disabled`)
+
                     parent.appendChild(item)
                     item.appendChild(content)
                     theta1 += ddtheta
@@ -621,7 +620,7 @@ let cxtmenu = function (params) {
                     let inThisCommand = theta1 <= theta && theta <= theta2
                         || theta1 <= theta + 2 * Math.PI && theta + 2 * Math.PI <= theta2
 
-                    if (command.disabled === true || command.enabled === false)
+                    if (command.enabled === false || (typeof command.enabled === 'function' && command.enabled() === false))
                         inThisCommand = false
 
                     if (inThisCommand) {
@@ -633,52 +632,58 @@ let cxtmenu = function (params) {
                 }
                 hideSubmenuContent()
 
-                // Do not draw indicator while mouse in inner circle or out of circle # But if a command has submenu, draw indicator util mouse out of submenu (2*r)
-                if (d < rs + options.spotlightPadding || ((d > options.menuRadius) && !commands[activeCommandI].submenu)) {
-                    queueDrawBg()
-                    cancelActiveCommand()
-                    return
-                }
+                if (commands[activeCommandI] !== undefined) {
 
-                if (d > rs + options.spotlightPadding && (d < options.menuRadius)) {
-                    queueDrawBg()
-                    if (!commands[activeCommandI].submenu) {
-                        queueDrawCommands(rx, ry, theta)
-                    } else {
-                        showSubmenuContent(activeCommandI)
-                        queueDrawSubmenuBg(rx, ry, theta)
+                    // Do not draw indicator while mouse in inner circle or out of circle # But if a command has submenu, draw indicator util mouse out of submenu (2*r)
+                    if (d < rs + options.spotlightPadding || ((d > options.menuRadius) && !commands[activeCommandI].submenu)) {
+                        queueDrawBg()
+                        cancelActiveCommand()
+                        return
                     }
-                    return
-                }
 
-                if ((d < options.menuRadius * 2 && d > options.menuRadius) && commands[activeCommandI].submenu) {
-                    showSubmenuContent(activeCommandI)
-                    submenu_commands = commands[activeCommandI].submenu
-                    queueDrawBg()
-                    // Judge which submenu used
-                    let ddtheta = dtheta / submenu_commands.length
-                    let theta1 = Math.PI / 2
-                    let theta2 = theta1 + ddtheta
-                    theta1 += dtheta * activeCommandI
-                    theta2 += dtheta * activeCommandI
-                    for (let i = 0; i < submenu_commands.length; i++) {
-                        let submenu_command = commands[activeCommandI].submenu[i]
-                        let inThisSubMenuCommand = theta1 <= theta && theta <= theta2
-                            || theta1 <= theta + 2 * Math.PI && theta + 2 * Math.PI <= theta2
-                        if (submenu_command.disabled === true || submenu_command.enabled === false)
-                            inThisSubMenuCommand = false
-                        if (inThisSubMenuCommand) {
-                            activeSubCommandI = i
-                            break
+                    if (d > rs + options.spotlightPadding && (d < options.menuRadius)) {
+                        queueDrawBg()
+                        if (!commands[activeCommandI].submenu) {
+                            queueDrawCommands(rx, ry, theta)
+                        } else {
+                            showSubmenuContent(activeCommandI)
+                            queueDrawSubmenuBg(rx, ry, theta)
                         }
-                        theta1 += ddtheta
-                        theta2 += ddtheta
+                        return
                     }
 
-                    queueDrawSubmenuBg(rx, ry, theta)
-                    queueDrawSubmenuCommands()
-                    return
+                    if ((d < options.menuRadius * 2 && d > options.menuRadius) && commands[activeCommandI].submenu) {
+                        showSubmenuContent(activeCommandI)
+                        submenu_commands = commands[activeCommandI].submenu
+                        queueDrawBg()
+                        // Judge which submenu used
+                        let ddtheta = dtheta / submenu_commands.length
+                        let theta1 = Math.PI / 2
+                        let theta2 = theta1 + ddtheta
+                        theta1 += dtheta * activeCommandI
+                        theta2 += dtheta * activeCommandI
+                        for (let i = 0; i < submenu_commands.length; i++) {
+                            let submenu_command = commands[activeCommandI].submenu[i]
+                            let inThisSubMenuCommand = theta1 <= theta && theta <= theta2
+                                || theta1 <= theta + 2 * Math.PI && theta + 2 * Math.PI <= theta2
+                            if (submenu_command.enabled === false || (typeof submenu_command.enabled === 'function' && submenu_command.enabled() === false)) {
+                                inThisSubMenuCommand = false
+                                activeSubCommandI = undefined
+                            }
+                            if (inThisSubMenuCommand) {
+                                activeSubCommandI = i
+                                break
+                            }
+                            theta1 += ddtheta
+                            theta2 += ddtheta
+                        }
+
+                        queueDrawSubmenuBg(rx, ry, theta)
+                        queueDrawSubmenuCommands()
+                        return
+                    }
                 }
+
                 cancelActiveCommand()
                 queueDrawBg()
             })

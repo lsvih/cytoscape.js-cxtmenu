@@ -8,6 +8,7 @@ New features:
 - Using traditional gesture for operation
 - Support submenu
 - Support dynamic content (pass function into content argument, see demo.html)
+- Support dynamic `enabled` attribute
 
 ![Preview](https://raw.githubusercontent.com/lsvih/cytoscape.js-cxtmenu/master/preview.png)
 
