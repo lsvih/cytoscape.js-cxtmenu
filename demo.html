@@ -114,6 +114,10 @@
                                 select: function (ele) {
                                     console.log(ele.id());
                                 }
+                            },
+                            {
+                                content: 'What',
+                                enabled: () => false
                             }
                         ],
                         enabled: true
@@ -122,9 +126,9 @@
                     {
                         content: ()=>cy.$(':selected').length === 0?'No selected':'Selected ' + cy.$(':selected').length + ' elems',
                         select: function (ele) {
-                            console.log(ele.position());
+                            alert('You selected ' + cy.$(':selected').length + ' elements!');
                         },
-                        enabled: true
+                        enabled: ()=> cy.$(':selected').length !== 0
                     }
                 ]
             });
