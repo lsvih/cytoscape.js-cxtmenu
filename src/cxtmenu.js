@@ -93,8 +93,6 @@ let cxtmenu = function (params) {
             let content = createElement({class: 'cxtmenu-content'})
             if (command.content instanceof HTMLElement)
                 content.appendChild(command.content)
-            else if (typeof command.content === 'function')
-                content.innerHTML = command.content()
             else
                 content.innerHTML = command.content
 
@@ -106,7 +104,7 @@ let cxtmenu = function (params) {
             })
 
             setStyles(content, command.contentStyle || {})
-            if (command.enabled === false || (typeof command.enabled === 'function' && command.enabled() === false))
+            if (command.enabled === false)
                 content.setAttribute('class', 'cxtmenu-content cxtmenu-disabled')
 
             parent.appendChild(item)
@@ -150,8 +148,6 @@ let cxtmenu = function (params) {
                     let content = createElement({class: `cxtmenu-content cxtmenu-submenu-content cxtmenu-${i}-submenu-content`})
                     if (submenu.content instanceof HTMLElement)
                         content.appendChild(submenu.content)
-                    else if (typeof submenu.content === 'function')
-                        content.innerHTML = submenu.content()
                     else
                         content.innerHTML = submenu.content
 
@@ -162,7 +158,7 @@ let cxtmenu = function (params) {
                         'display': 'none'
                     })
                     setStyles(content, command.contentStyle || {})
-                    if (command.enabled === false || (typeof submenu.enabled === 'function' && submenu.enabled() === false))
+                    if (submenu.enabled === false)
                         content.setAttribute('class', `cxtmenu-content cxtmenu-submenu-content cxtmenu-${i}-submenu-content cxtmenu-disabled`)
 
                     parent.appendChild(item)
@@ -620,7 +616,7 @@ let cxtmenu = function (params) {
                     let inThisCommand = theta1 <= theta && theta <= theta2
                         || theta1 <= theta + 2 * Math.PI && theta + 2 * Math.PI <= theta2
 
-                    if (command.enabled === false || (typeof command.enabled === 'function' && command.enabled() === false))
+                    if (command.enabled === false)
                         inThisCommand = false
 
                     if (inThisCommand) {
@@ -666,7 +662,7 @@ let cxtmenu = function (params) {
                             let submenu_command = commands[activeCommandI].submenu[i]
                             let inThisSubMenuCommand = theta1 <= theta && theta <= theta2
                                 || theta1 <= theta + 2 * Math.PI && theta + 2 * Math.PI <= theta2
-                            if (submenu_command.enabled === false || (typeof submenu_command.enabled === 'function' && submenu_command.enabled() === false)) {
+                            if (submenu_command.enabled === false) {
                                 inThisSubMenuCommand = false
                                 activeSubCommandI = undefined
                             }

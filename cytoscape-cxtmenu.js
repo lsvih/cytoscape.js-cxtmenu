@@ -173,7 +173,7 @@ let cxtmenu = function (params) {
             });
 
             let content = createElement({ class: 'cxtmenu-content' });
-            if (command.content instanceof HTMLElement) content.appendChild(command.content);else if (typeof command.content === 'function') content.innerHTML = command.content();else content.innerHTML = command.content;
+            if (command.content instanceof HTMLElement) content.appendChild(command.content);else content.innerHTML = command.content;
 
             setStyles(content, {
                 'width': r * 0.66 + 'px',
@@ -183,7 +183,7 @@ let cxtmenu = function (params) {
             });
 
             setStyles(content, command.contentStyle || {});
-            if (command.enabled === false || typeof command.enabled === 'function' && command.enabled() === false) content.setAttribute('class', 'cxtmenu-content cxtmenu-disabled');
+            if (command.enabled === false) content.setAttribute('class', 'cxtmenu-content cxtmenu-disabled');
 
             parent.appendChild(item);
             item.appendChild(content);
@@ -224,7 +224,7 @@ let cxtmenu = function (params) {
                         marginTop: -ry1 - r * 0.33 + 'px'
                     });
                     let content = createElement({ class: `cxtmenu-content cxtmenu-submenu-content cxtmenu-${i}-submenu-content` });
-                    if (submenu.content instanceof HTMLElement) content.appendChild(submenu.content);else if (typeof submenu.content === 'function') content.innerHTML = submenu.content();else content.innerHTML = submenu.content;
+                    if (submenu.content instanceof HTMLElement) content.appendChild(submenu.content);else content.innerHTML = submenu.content;
 
                     setStyles(content, {
                         'width': r * 0.66 + 'px',
@@ -233,7 +233,7 @@ let cxtmenu = function (params) {
                         'display': 'none'
                     });
                     setStyles(content, command.contentStyle || {});
-                    if (command.enabled === false || typeof submenu.enabled === 'function' && submenu.enabled() === false) content.setAttribute('class', `cxtmenu-content cxtmenu-submenu-content cxtmenu-${i}-submenu-content cxtmenu-disabled`);
+                    if (submenu.enabled === false) content.setAttribute('class', `cxtmenu-content cxtmenu-submenu-content cxtmenu-${i}-submenu-content cxtmenu-disabled`);
 
                     parent.appendChild(item);
                     item.appendChild(content);
@@ -656,7 +656,7 @@ let cxtmenu = function (params) {
 
                 let inThisCommand = theta1 <= theta && theta <= theta2 || theta1 <= theta + 2 * Math.PI && theta + 2 * Math.PI <= theta2;
 
-                if (command.enabled === false || typeof command.enabled === 'function' && command.enabled() === false) inThisCommand = false;
+                if (command.enabled === false) inThisCommand = false;
 
                 if (inThisCommand) {
                     activeCommandI = i;
@@ -700,7 +700,7 @@ let cxtmenu = function (params) {
                     for (let i = 0; i < submenu_commands.length; i++) {
                         let submenu_command = commands[activeCommandI].submenu[i];
                         let inThisSubMenuCommand = theta1 <= theta && theta <= theta2 || theta1 <= theta + 2 * Math.PI && theta + 2 * Math.PI <= theta2;
-                        if (submenu_command.enabled === false || typeof submenu_command.enabled === 'function' && submenu_command.enabled() === false) {
+                        if (submenu_command.enabled === false) {
                             inThisSubMenuCommand = false;
                             activeSubCommandI = undefined;
                         }

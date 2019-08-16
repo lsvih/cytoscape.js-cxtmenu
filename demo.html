@@ -99,7 +99,6 @@
                             console.log(ele.id());
                         }
                     },
-
                     {
                         content: '<span class="fa fa-star fa-2x"></span>',
                         submenu: [
@@ -117,18 +116,14 @@
                             },
                             {
                                 content: 'What',
-                                enabled: () => false
+                                enabled: false
                             }
                         ],
                         enabled: true
                     },
-
                     {
-                        content: ()=>cy.$(':selected').length === 0?'No selected':'Selected ' + cy.$(':selected').length + ' elems',
-                        select: function (ele) {
-                            alert('You selected ' + cy.$(':selected').length + ' elements!');
-                        },
-                        enabled: ()=> cy.$(':selected').length !== 0
+                        content: 'disabled',
+                        enabled: false
                     }
                 ]
             });
@@ -136,7 +131,7 @@
             cy.cxtmenu({
                 selector: 'core',
 
-                commands: [
+                commands: () => cy.$(':selected').length === 0 ? [
                     {
                         content: 'bg1',
                         select: function () {
@@ -150,7 +145,12 @@
                             console.log('bg2');
                         }
                     }
-                ]
+                ] : [{
+                    content: 'bg1',
+                    select: function () {
+                        console.log('bg1');
+                    }
+                }]
             });
 
         });
