@@ -166,9 +166,10 @@ let cxtmenu = function (params) {
                     theta1 += ddtheta
                     theta2 += ddtheta
                 }
+            } else {
+                theta1 += dtheta
+                theta2 += dtheta
             }
-            theta1 += dtheta
-            theta2 += dtheta
         }
     }
 
