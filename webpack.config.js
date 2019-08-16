@@ -13,8 +13,8 @@ let config = {
   entry: './src/index.js',
   output: {
     path: path.join( __dirname ),
-    filename: pkg.name + '.js',
-    library: camelcase( pkg.name ),
+    filename: pkg.original_name + '.js',
+    library: camelcase( pkg.original_name ),
     libraryTarget: 'umd'
   },
   module: {

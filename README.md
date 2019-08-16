@@ -3,6 +3,12 @@ cytoscape-cxtmenu
 
 This project is a fork of [official repo](https://github.com/cytoscape/cytoscape.js-cxtmenu)
 
+New features:
+
+- Using traditional gesture for operation
+- Support submenu
+- Support dynamic content (pass function into content argument, see demo.html)
+
 ![Preview](https://raw.githubusercontent.com/lsvih/cytoscape.js-cxtmenu/master/preview.png)
 
 [Demo](https://lsvih.github.io/cytoscape.js-cxtmenu/)

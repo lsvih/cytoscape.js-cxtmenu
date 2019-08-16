@@ -91,9 +91,11 @@ let cxtmenu = function (params) {
             })
 
             let content = createElement({class: 'cxtmenu-content'})
-
+            console.log(command.content)
             if (command.content instanceof HTMLElement)
                 content.appendChild(command.content)
+            else if (typeof command.content === 'function')
+                content.innerHTML = command.content()
             else
                 content.innerHTML = command.content
 
@@ -147,11 +149,13 @@ let cxtmenu = function (params) {
                         marginTop: (-ry1 - r * 0.33) + 'px'
                     })
                     let content = createElement({class: `cxtmenu-content cxtmenu-submenu-content cxtmenu-${i}-submenu-content`})
-                    if (command.content instanceof HTMLElement) {
+                    if (command.content instanceof HTMLElement)
                         content.appendChild(command.submenu[j].content)
-                    } else {
+                    else if (typeof command.content === 'function')
+                        content.innerHTML = command.submenu[j].content()
+                    else
                         content.innerHTML = command.submenu[j].content
-                    }
+
                     setStyles(content, {
                         'width': (r * 0.66) + 'px',
                         'height': (r * 0.66) + 'px',
@@ -698,7 +702,7 @@ let cxtmenu = function (params) {
             })
     }
 
-    function cancelActiveCommand(){
+    function cancelActiveCommand() {
         activeCommandI = undefined
         activeSubCommandI = undefined
     }
