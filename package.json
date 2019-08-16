@@ -1,7 +1,7 @@
 {
   "name": "@lsvih/cytoscape-cxtmenu",
   "original_name": "cytoscape-cxtmenu",
-  "version": "3.1.3",
+  "version": "3.1.4",
   "description": "A circular context menu (with submenu) extension for Cytoscape.js",
   "main": "cytoscape-cxtmenu.js",
   "author": {
